@@ -1,242 +1,278 @@
-// 1 задание
+//// 1 задание в9
 //#include <iostream>
-//#include <stdio.h>
 //#include <cmath>
-// 
-//#define E 0.0001
-// 
+//
+//#define EPSILON 0.0001 // Задаем точность для методов
+//
 //using namespace std;
-// 
-//double f(double x) {
-//   return sin(x + 1) - x - 1;
+//
+//// Функция, корень которой мы ищем
+//double func(double x) {
+//    return sin(x + 1) - x - 1;
 //}
-// 
-//double canonicalForm(double x) {
-//   return sin(x + 1) - 1;
+//
+//// Каноническая форма для метода простых итераций
+//double canonF(double x) {
+//    return sin(x + 1) - 1;
 //}
-// 
+//
+//// Первая производная канонической формы
 //double canonicalFormDer1(double x) {
-//   return cos(x + 1); // может быть -1
+//    return cos(x + 1); // Производная функции sin(x + 1) - 1
 //}
-// 
-//double fDer1(double x) {
-//   return cos(x + 1) - 1;
+//
+//// Первая производная исходной функции
+//double DerivateFirst(double x) {
+//    return cos(x + 1) - 1;
 //}
-// 
-//double fDer2(double x) {
-//   return -sin(x + 1);
+//
+//// Вторая производная исходной функции
+//double Derivative2(double x) {
+//    return -sin(x + 1);
 //}
-// 
-//double halfDivision(double ak, double bk, int k) {
-//   printf("|\t%d\t|\t%.3lf\t|\t%.3lf\t|\t%.3lf\t|\n", k, ak, bk, bk - ak);
-// 
-//   if (k != 0 && abs(bk - ak) <= E) {
-//       return (ak + bk) / 2;
-//   }
-//   k++;
-// 
-//   double ck = (ak + bk) / 2;
-//   if (f(ak) * f(ck) < 0) {
-//       return halfDivision(ak, ck, k);
-//   } else {
-//       return halfDivision(ck, bk, k);
-//   }
+//
+//// Метод половинного деления для нахождения корня
+//double halfdell(double ak, double bk, int k) {
+//    // Вывод текущего состояния
+//    printf("|\t%d\t|\t%.3lf\t|\t%.3lf\t|\t%.3lf\t|\n", k, ak, bk, bk - ak);
+//
+//    // Проверка условия остановки
+//    if (k != 0 && abs(bk - ak) <= EPSILON) {
+//        return (ak + bk) / 2;
+//    }
+//    k++;
+//
+//    double ck = (ak + bk) / 2;
+//    // Рекурсивное продолжение метода половинного деления
+//    if (func(ak) * func(ck) < 0) {
+//        return halfdell(ak, ck, k);
+//    } else {
+//        return halfdell(ck, bk, k);
+//    }
 //}
-// 
-//double newton(double xk, int k) {
-//   double xkNew = xk - (f(xk) / fDer1(xk));
-// 
-//   printf("|\t%d\t|\t%.3lf\t|\t%.3lf\t|\t%.3lf\t|\n", k, xk, xkNew, xkNew - xk);
-// 
-//   if (abs(xkNew - xk) < E) {
-//       return xkNew;
-//   } else {
-//       return newton(xkNew, ++k);
-//   }
+//
+//// Метод Ньютона для нахождения корня
+//double Newton(double xk, int k) {
+//    double xkNew = xk - (func(xk) / DerivateFirst(xk));
+//
+//    // Вывод текущего состояния
+//    printf("|\t%d\t|\t%.3lf\t|\t%.3lf\t|\t%.3lf\t|\n", k, xk, xkNew, xkNew - xk);
+//
+//    // Проверка условия остановки
+//    if (abs(xkNew - xk) < EPSILON) {
+//        return xkNew;
+//    } else {
+//        return Newton(xkNew, ++k);
+//    }
 //}
-// 
-//double simpleIterations(double xk, double q, int k) {
-//   double xkNew = canonicalForm(xk);
-// 
-//   printf("|\t%d\t|\t%.3lf\t|\t%.3lf\t|\t%.3lf\t|\n", k, xk, xkNew, xkNew - xk);
-// 
-//   if (abs(xkNew - xk) <= E) {
-//       return xkNew;
-//   } else {
-//       return simpleIterations(xkNew, q, ++k);
-//   }
+//
+//// Метод простых итераций для нахождения корня
+//double simpleIter(double xk, double q, int k) {
+//    double xkNew = canonF(xk);
+//
+//    // Вывод текущего состояния
+//    printf("|\t%d\t|\t%.3lf\t|\t%.3lf\t|\t%.3lf\t|\n", k, xk, xkNew, xkNew - xk);
+//
+//    // Проверка условия остановки
+//    if (abs(xkNew - xk) <= EPSILON) {
+//        return xkNew;
+//    } else {
+//        return simpleIter(xkNew, q, ++k);
+//    }
 //}
-// 
+//
+//// Функция для отображения меню выбора метода
 //void menu() {
-//   cout << "=== MENU ===\n1. The method of half division\n2. Newton method\n3. The method of simple iterations\n4. Menu\n5. Exit\n========\n";
+//    cout << "1. Метод половинного деления\n2. Метод Ньютона\n3. Метод простых итераций\n";
 //}
-// 
+//
+//// Главная функция
 //int main() {
-//   double a0, b0;
-//   double x0;
-//   double x;
-//   double q = 0.9;
-// 
-//   int choice;
-// 
-//   menu();
-//   while (true) {
-//       cout << "Choice: ";
-//       cin >> choice;
-// 
-//       switch (choice) {
-//       case 1:
-//           cout << "a0=";
-//           cin >> a0;
-//           cout << "b0=";
-//           cin >> b0;
-// 
-//           cout << "|\tN\t|\tan\t|\tbn\t|\tbn-an\t|" << endl;
-//           x = halfDivision(a0, b0, 0);
-// 
-//           cout << "x=" << x << endl;
-//           break;
-//       case 2:
-//           cout << "x0=";
-//           cin >> x0;
-// 
-//           if (f(x0)*fDer2(x0) <= 0) {
-//               cout << "x0 not satisfy f(x0)*f''(x0) > 0" << endl;
-//               exit(0);
-//           }
-// 
-//           cout << "|\tN\t|\txn\t|\tx(n+1)\t|   x(n+1)-xn\t|" << endl;
-//           x = newton(x0, 0);
-// 
-//           cout << "x=" << x << endl;
-//           break;
-//       case 3:
-//           cout << "x0=";
-//           cin >> x0;
-// 
-//           if (abs(canonicalFormDer1(x0)) <= q && q < 1) {
-//               cout << "x0 not satisfy |phi'(x0)|<=q<1" << endl;
-//               exit(0);
-//           }
-// 
-//           cout << "|\tN\t|\txn\t|\tx(n+1)\t|   x(n+1)-xn\t|" << endl;
-//           x = simpleIterations(x0, q, 0);
-// 
-//           cout << "x=" << x << endl;
-//           break;
-//       case 4:
-//           menu();
-//           break;
-//       default:
-//           return 0;
-//           break;
-//       }
-//   }
-// 
-//   return 0;
+//    double a0, b0; // Интервал для метода половинного деления
+//    double x0; // Начальное приближение для методов Ньютона и простых итераций
+//    double x; // Переменная для хранения результата
+//    double q = 0.9; // Коэффициент сходимости для метода простых итераций
+//
+//    int choice; // Переменная для хранения выбора пользователя
+//
+//    menu(); // Вывод меню
+//    while (true) {
+//        cout << "Ваш выбор: ";
+//        cin >> choice;
+//
+//        switch (choice) {
+//            case 1:
+//                // Ввод начальных значений для метода половинного деления
+//                cout << "a0=";
+//                cin >> a0;
+//                cout << "b0=";
+//                cin >> b0;
+//
+//                // Заголовок таблицы
+//                cout << "|\tN\t|\tan\t|\tbn\t|\tbn-an\t|" << endl;
+//                // Вызов метода половинного деления
+//                x = halfdell(a0, b0, 0);
+//
+//                cout << "x=" << x << endl;
+//                break;
+//            case 2:
+//                // Ввод начального значения для метода Ньютона
+//                cout << "x0=";
+//                cin >> x0;
+//
+//                // Проверка условия сходимости
+//                if (func(x0)*Derivative2(x0) <= 0) {
+//                    cout << "x0 not satisfy func(x0)*func''(x0) > 0" << endl;
+//                    exit(0);
+//                }
+//
+//                // Заголовок таблицы
+//                cout << "|\tN\t|\txn\t|\tx(n+1)\t|   x(n+1)-xn\t|" << endl;
+//                // Вызов метода Ньютона
+//                x = Newton(x0, 0);
+//
+//                cout << "x=" << x << endl;
+//                break;
+//            case 3:
+//                // Ввод начального значения для метода простых итераций
+//                cout << "x0=";
+//                cin >> x0;
+//
+//                // Проверка условия сходимости
+//                if (abs(canonicalFormDer1(x0)) <= q && q < 1) {
+//                    cout << "x0 not satisfy |phi'(x0)|<=q<1" << endl;
+//                    exit(0);
+//                }
+//
+//                // Заголовок таблицы
+//                cout << "|\tN\t|\txn\t|\tx(n+1)\t|   x(n+1)-xn\t|" << endl;
+//                // Вызов метода простых итераций
+//                x = simpleIter(x0, q, 0);
+//
+//                cout << "x=" << x << endl;
+//                break;
+//            case 4:
+//                // Показать меню снова
+//                menu();
+//                break;
+//            default:
+//                return 0;
+//                break;
+//        }
+//    }
+//
+//    return 0;
 //}
 
-//// 2 задание
+
+// 2 задание в3
+//
 //#include <iostream>
 //#include <vector>
+//#include <cstdlib>
 //#include <ctime>
 //#include <algorithm>
-//#include <cctype>
 //
-//// Функция для проверки, есть ли в числе повторяющиеся цифры
-//bool hasRepeatedDigits(int num) {
-//    int digit = num % 10;
-//    num /= 10;
-//    while (num > 0) {
-//        if (num % 10 == digit) {
-//            return true;
-//        }
-//        digit = num % 10;
-//        num /= 10;
-//    }
-//    return false;
+//// Функция для проверки четного числа
+//bool isEven(int number) {
+//    return number % 2 == 0;
+//}
+//
+//// Функция для проверки нечетного числа
+//bool isOdd(int number) {
+//    return number % 2 != 0;
+//}
+//
+//// Функция для генерации случайного числа в заданном диапазоне
+//int getRandomNumber(int min, int max) {
+//    return rand() % (max - min + 1) + min;
 //}
 //
 //int main() {
-//    srand(time(0));
-//    int n = 10; // n должно быть чётным
-//    std::vector<int> arr1(n), arr2(n / 2);
+//    srand(time(0));  // Инициализация генератора случайных чисел
 //
-//    // Заполнение массивов
-//    for (int i = 0; i < n; ++i) {
-//        arr1[i] = 100 + rand() % 801; // [100, 900]
+//    int n = 10;  // n должно быть четным
+//    std::vector<int> array1(n);
+//    std::vector<int> array2(n / 2);
+//
+//    // Инициализация array1 числами из диапазона [100, 900]
+//    for(int &num : array1) {
+//        num = getRandomNumber(100, 900);
 //    }
 //
-//    for (int i = 0; i < n / 2; ++i) {
-//        arr2[i] = 2 + rand() % 49; // [2, 50]
+//    // Инициализация array2 числами из диапазона [2, 50]
+//    for(int &num : array2) {
+//        num = getRandomNumber(2, 50);
 //    }
 //
-//    // Вывод чётных элементов массива 1 на нечётных местах и нечётных элементов массива 2 на чётных местах
-//    for (int i = 1; i < n; i += 2) {
-//        if (arr1[i] % 2 == 0) {
-//            std::cout << arr1[i] << " ";
+//    // Вывод четных элементов array1 на нечетных местах
+//    std::cout << "Четные элементы массива 1 на нечетных местах:" << std::endl;
+//    for(int i = 1; i < array1.size(); i += 2) {
+//        if(isEven(array1[i])) {
+//            std::cout << "Index " << i << ": " << array1[i] << std::endl;
 //        }
+//    }
+//
+//    // Вывод нечетных элементов array2 на четных местах
+//    std::cout << "Нечетные элементы массива 2 на четных местах:" << std::endl;
+//    for(int i = 0; i < array2.size(); i += 2) {
+//        if(isOdd(array2[i])) {
+//            std::cout << "Index " << i << ": " << array2[i] << std::endl;
+//        }
+//    }
+//
+//    // Инициализация массива из k чисел, являющимися результатом целочисленного деления случайного элемента из array1 на случайный элемент из array2
+//    int k = 10;  // k >= 10
+//    std::vector<int> array3(k);
+//    for(int &num : array3) {
+//        int num1 = array1[getRandomNumber(0, array1.size() - 1)];
+//        int num2 = array2[getRandomNumber(0, array2.size() - 1)];
+//        num = num1 / num2;
+//    }
+//
+//    // Вывод массива array3
+//    std::cout << "Массив 3:" << std::endl;
+//    for(const int &num : array3) {
+//        std::cout << num << " ";
 //    }
 //    std::cout << std::endl;
 //
-//    for (int i = 0; i < n / 2; i += 2) {
-//        if (arr2[i] % 2 != 0) {
-//            std::cout << arr2[i] << " ";
+//    // Инициализация массива случайных символов
+//    std::string charArray = "AbCdEfGhIjKlMnOpQrStUvWxYz";
+//    std::cout << "Исходный массив символов: " << charArray << std::endl;
+//
+//    // Удаление заглавных букв из массива
+//    charArray.erase(std::remove_if(charArray.begin(), charArray.end(), [](char c) { return isupper(c); }), charArray.end());
+//    std::cout << "Массив символов без заглавных букв: " << charArray << std::endl;
+//
+//    // Инициализация массива случайных целых чисел в диапазоне [0, 300]
+//    std::vector<int> randomArray(20);
+//    for(int &num : randomArray) {
+//        num = getRandomNumber(0, 300);
+//    }
+//
+//    // Сортировка массива по возрастанию
+//    std::sort(randomArray.begin(), randomArray.end());
+//
+//    // Создание нового массива с элементами, в которых цифры повторяются дважды
+//    std::vector<int> repeatedDigitsArray;
+//    for(const int &num : randomArray) {
+//        std::string numStr = std::to_string(num);
+//        bool hasRepeatedDigits = false;
+//        for(char c : numStr) {
+//            if(std::count(numStr.begin(), numStr.end(), c) > 1) {
+//                hasRepeatedDigits = true;
+//                break;
+//            }
 //        }
-//    }
-//    std::cout << std::endl;
-//
-//    // Определение и инициализация массива из k чисел
-//    int k = 10;
-//    std::vector<int> arr3(k);
-//
-//    for (int i = 0; i < k; ++i) {
-//        int rand1 = arr1[rand() % n];
-//        int rand2 = arr2[rand() % (n / 2)];
-//        if (rand2 != 0) {
-//            arr3[i] = rand1 / rand2;
-//        } else {
-//            arr3[i] = 0; // или какое-то другое значение по умолчанию
-//        }
-//    }
-//
-//    // Определение и инициализация массива случайных символов
-//    std::vector<char> arr4(k);
-//
-//    for (int i = 0; i < k; ++i) {
-//        arr4[i] = 'a' + rand() % 26; // случайные буквы
-//    }
-//
-//    // Удаление заглавных букв
-//    arr4.erase(std::remove_if(arr4.begin(), arr4.end(), [](char c){ return std::isupper(c); }), arr4.end());
-//
-//    // Вывод массива символов для проверки
-//    for (char c : arr4) {
-//        std::cout << c << " ";
-//    }
-//    std::cout << std::endl;
-//
-//    // Определение и инициализация массива случайных целых чисел
-//    std::vector<int> arr5(k);
-//
-//    for (int i = 0; i < k; ++i) {
-//        arr5[i] = rand() % 301; // случайные числа от 0 до 300
-//    }
-//
-//    // Сортировка массива
-//    std::sort(arr5.begin(), arr5.end());
-//
-//    // Создание нового массива с числами, в которых повторяются цифры
-//    std::vector<int> arr6;
-//
-//    for (int num : arr5) {
-//        if (hasRepeatedDigits(num)) {
-//            arr6.push_back(num);
+//        if(hasRepeatedDigits) {
+//            repeatedDigitsArray.push_back(num);
 //        }
 //    }
 //
-//    // Вывод массива для проверки
-//    for (int num : arr6) {
+//    // Вывод массива с повторяющимися цифрами
+//    std::cout << "Массив с элементами, в которых цифры повторяются дважды:" << std::endl;
+//    for(const int &num : repeatedDigitsArray) {
 //        std::cout << num << " ";
 //    }
 //    std::cout << std::endl;
@@ -244,259 +280,260 @@
 //    return 0;
 //}
 
-
-
- //задание 3
-#include <iostream>
-#include <random>
-#include <vector>
-#include <algorithm>
-#include <cmath>
- 
-using namespace std;
- 
-ostream& operator<<(ostream& os, const vector<int>& vec) {
-   for (auto elem : vec) {
-       os << elem << " ";
-   }
-   return os;
-}
- 
-int getRand(int a, int b) {
-   random_device rd;
-   mt19937 gen(rd());
-   uniform_int_distribution<> dis(a, b);
- 
-   return dis(gen);
-}
- 
-vector<int> getRandVector(int count, int a, int b) {
-   vector<int> result;
- 
-   for (int i = 0; i < count; i++) {
-       result.push_back(getRand(a, b));
-   }
- 
-   return result;
-}
- 
-double getVn(const vector<int>& vec, int index1, int index2) {
-   vector<int> uniqueNumbersVec;
- 
-   for (int j = index1; j < index2; j++) {
-       auto it = find(uniqueNumbersVec.begin(), uniqueNumbersVec.end(), vec[j]);
-       if (it == uniqueNumbersVec.end()) {
-           uniqueNumbersVec.push_back(vec[j]);
-       }
-   }
-   return uniqueNumbersVec.size();
-}
- 
-double getHiSquare(vector<int> vec) {
-   double hiSquare = 0;
-   int interval = vec.size() / 5;
-   int vExp = interval;
-   int vn;
- 
-   int intervalIndex1, intervalIndex2;
-   for (int i = 0; i < 5; i++) {
-       intervalIndex1 = i * interval;
-       intervalIndex2 = i * interval + interval;
-       vn = getVn(vec, intervalIndex1, intervalIndex2);
-       hiSquare += pow(vn - vExp, 2) / vExp;
-   }
-   return hiSquare;
-}
- 
-double realMathExp(vector<int> vec) {
-   double sum = 0.0;
-   for (double value : vec) {
-       sum += value;
-   }
-   return sum / vec.size(); // Среднее арифметическое значений вектора
-}
- 
-double expectedMathExp(int n){
-   double sum = 0.0;
-   for (int i = 1; i <= n; i++){
-       sum += i;
-   }
-   return sum / n;
-}
- 
-int main() {
-   vector<int> vec50 = getRandVector(50, 1, 100);
-   vector<int> vec100 = getRandVector(100, 1, 100);
-   vector<int> vec1000 = getRandVector(1000, 1, 100);
- 
-   cout << "vec50 = " << vec50 << endl;
-   cout << "hiSquare50 = " << getHiSquare(vec50) << endl;
-   cout << "Real Math Expectation = " << realMathExp(vec50) << endl;
-   cout << "Expected Math Expectation = " << expectedMathExp(vec50.size()) << endl;
- 
-   cout << "hiSquare100 = " << getHiSquare(vec100) << endl;
-   cout << "Real Math Expectation = " << realMathExp(vec100) << endl;
-   cout << "Expected Math Expectation = " << expectedMathExp(vec100.size()) << endl;
- 
-   cout << "hiSquare1000 = " << getHiSquare(vec1000) << endl;
-   cout << "Real Math Expectation = " << realMathExp(vec1000) << endl;
-   cout << "Expected Math Expectation = " << expectedMathExp(vec1000.size()) << endl;
- 
-   return 0;
-}
-
-
-
-
-//
+//задание 3 в8
 //#include <iostream>
-//#include <vector>
 //#include <random>
+//#include <vector>
+//#include <algorithm>
+//#include <cmath>
+//
 //using namespace std;
-// 
-//// Функция для генерации случайного выбора алгоритма
-//bool random_choice() {
-//    random_device rd;
-//    mt19937 gen(rd());
-//    uniform_int_distribution<> dis(0, 1);
-//    return dis(gen);
-//}
-// 
-//// Алгоритм А: случайный выбор
-//bool algorithm_A(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
-//    return random_choice();
-//}
-// 
-//// Алгоритм Б: всегда предательство
-//bool algorithm_B(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
-//    return false;
-//}
-// 
-//// Алгоритм В: всегда сотрудничество
-//bool algorithm_C(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
-//    return true;
-//}
-// 
-//// Функция для определения результатов раунда
-//pair<int, int> get_round_result(bool algorithm_A_choice, bool algorithm_B_choice) {
-//    if (algorithm_A_choice && algorithm_B_choice) {
-//        return {24, 24};
-//    } else if (!algorithm_A_choice && !algorithm_B_choice) {
-//        return {4, 4};
-//    } else if (algorithm_A_choice && !algorithm_B_choice) {
-//        return {0, 20};
-//    } else {
-//        return {20, 0};
+//
+//ostream& operator<<(ostream& os, const vector<int>& vec) {
+//    for (auto elem : vec) {
+//        os << elem << " ";
 //    }
+//    return os;
 //}
-// 
-//// Функция для запуска игры
-//pair<int, int> play_game(bool (*algorithm_A)(int, const vector<bool>&, const vector<bool>&),
-//                              bool (*algorithm_B)(int, const vector<bool>&, const vector<bool>&)) {
+//
+//int generateRandomNumber(int min, int max) {
 //    random_device rd;
-//    mt19937 gen(rd());
-//    uniform_int_distribution<> dis(100, 200);
-//    int num_rounds = dis(gen);
-//    int algorithm_A_score = 0;
-//    int algorithm_B_score = 0;
-//    vector<bool> algorithm_A_choices;
-//    vector<bool> algorithm_B_choices;
-// 
-//    for (int round_number = 0; round_number < num_rounds; ++round_number) {
-//        bool algorithm_A_choice = algorithm_A(round_number, algorithm_A_choices, algorithm_B_choices);
-//        bool algorithm_B_choice = algorithm_B(round_number, algorithm_B_choices, algorithm_A_choices);
-// 
-//        auto [round_score_A, round_score_B] = get_round_result(algorithm_A_choice, algorithm_B_choice);
-//        algorithm_A_score += round_score_A;
-//        algorithm_B_score += round_score_B;
-// 
-//        algorithm_A_choices.push_back(algorithm_A_choice);
-//        algorithm_B_choices.push_back(algorithm_B_choice);
-//    }
-// 
-//    return {algorithm_A_score, algorithm_B_score};
+//    ranlux48 generator(rd());
+//    uniform_int_distribution<> distribution(min, max);
+//
+//    return distribution(generator);
 //}
-// 
+//
+//vector<int> createRandomVector(int size, int min, int max) {
+//    vector<int> vec;
+//    for (int i = 0; i < size; i++) {
+//        vec.push_back(generateRandomNumber(min, max));
+//    }
+//    return vec;
+//}
+//
+//double countUniqueElements(const vector<int>& vec, int start, int end) {
+//    vector<int> uniqueElements;
+//    for (int i = start; i < end; i++) {
+//        if (find(uniqueElements.begin(), uniqueElements.end(), vec[i]) == uniqueElements.end()) {
+//            uniqueElements.push_back(vec[i]);
+//        }
+//    }
+//    return uniqueElements.size();
+//}
+//
+//double calculateChiSquare(const vector<int>& vec) {
+//    double chiSquare = 0;
+//    int intervalSize = vec.size() / 5;
+//    int expectedValue = intervalSize;
+//    int uniqueCount;
+//
+//    for (int i = 0; i < 5; i++) {
+//        int intervalStart = i * intervalSize;
+//        int intervalEnd = intervalStart + intervalSize;
+//        uniqueCount = countUniqueElements(vec, intervalStart, intervalEnd);
+//        chiSquare += pow(uniqueCount - expectedValue, 2) / expectedValue;
+//    }
+//    return chiSquare;
+//}
+//
+//double computeMean(const vector<int>& vec) {
+//    double sum = 0.0;
+//    for (int value : vec) {
+//        sum += value;
+//    }
+//    return sum / vec.size();
+//}
+//
+//double calculateExpectedMean(int n) {
+//    double sum = 0.0;
+//    for (int i = 1; i <= n; i++) {
+//        sum += i;
+//    }
+//    return sum / n;
+//}
+//
 //int main() {
-//    // Запуск игры с алгоритмами А и B
-//    cout<<"1 игра"<<endl;
-//    auto [algorithm_A_score, algorithm_B_score] = play_game(algorithm_A, algorithm_B);
-//    cout << "Algorithm A score: " << algorithm_A_score << endl;
-//    cout << "Algorithm B score: " << algorithm_B_score << endl;
-// 
-//    // Запуск игры с алгоритмами А и C
-//    cout<<"2 игра"<<endl;
-//    auto [algorithm_A_score_2, algorithm_C_score] = play_game(algorithm_A, algorithm_C);
-//    cout << "Algorithm A score: " << algorithm_A_score_2 << endl;
-//    cout << "Algorithm C score: " << algorithm_C_score << endl;
-// 
-//    // Запуск игры с алгоритмами B и C
-//    cout<<"3 игра"<<endl;
-//    auto [algorithm_B_score_2, algorithm_C_score_2] = play_game(algorithm_B, algorithm_C);
-//    cout << "Algorithm B score: " << algorithm_B_score_2 << endl;
-//    cout << "Algorithm C score: " << algorithm_C_score_2 << endl;
-// 
+//    vector<int> vecOf50 = createRandomVector(50, 1, 100);
+//    vector<int> vecOf100 = createRandomVector(100, 1, 100);
+//    vector<int> vecOf1000 = createRandomVector(1000, 1, 100);
+//
+//    cout << "Vector 50 = " << vecOf50 << endl;
+//    cout << "Chi-Square for 50 elements = " << calculateChiSquare(vecOf50) << endl;
+//    cout << "Actual Mean for 50 elements = " << computeMean(vecOf50) << endl;
+//    cout << "Expected Mean for 50 elements = " << calculateExpectedMean(vecOf50.size()) << endl;
+//
+//    cout << "Chi-Square for 100 elements = " << calculateChiSquare(vecOf100) << endl;
+//    cout << "Actual Mean for 100 elements = " << computeMean(vecOf100) << endl;
+//    cout << "Expected Mean for 100 elements = " << calculateExpectedMean(vecOf100.size()) << endl;
+//
+//    cout << "Chi-Square for 1000 elements = " << calculateChiSquare(vecOf1000) << endl;
+//    cout << "Actual Mean for 1000 elements = " << computeMean(vecOf1000) << endl;
+//    cout << "Expected Mean for 1000 elements = " << calculateExpectedMean(vecOf1000.size()) << endl;
+//
 //    return 0;
 //}
 
 
-//// задание 5
+
+
+//4 задание
 //#include <iostream>
-//#include <unordered_map>
 //#include <vector>
+//#include <random>
+//
 //using namespace std;
-// 
-//vector<int> linear_congruential_generator(int X0, int A, int B, int C) {
-//    vector<int> sequence;
-//    unordered_map<int, int> seen;
-//    int index = 0;
-//    int rep_index = -1;
-//    while (sequence.size() < 10) {
-//        sequence.push_back(X0);
-//        if (seen.find(X0) != seen.end()) {
-//            if (rep_index == -1 || seen[X0] < rep_index) {
-//                rep_index = seen[X0];
-//            }
-//        } else {
-//            seen[X0] = index;
-//        }
-//        X0 = (A * X0 + B) % C;
-//        index++;
-//    }
-//    return sequence;
+//
+//// Функция для генерации случайного выбора (true или false)
+//bool random_choice() {
+//    random_device rd; // Источник случайности
+//    mt19937 gen(rd()); // Генератор случайных чисел
+//    uniform_int_distribution<> dis(0, 1); // Распределение от 0 до 1
+//    return dis(gen); // Возвращаем случайное значение (0 или 1, что соответствует false или true)
 //}
-// 
-//int linear_congruential_index(int X0, int A, int B, int C) {
-//    vector<int> sequence;
-//    unordered_map<int, int> find;
-//    int index = 0;
-//    int repeat_index = -1;
-//    while (true) {
-//        sequence.push_back(X0);
-//        if (find.find(X0) != find.end()) {
-//            repeat_index = index;
-//            break;
-//        }
-//        find[X0] = index;
-//        X0 = (A * X0 + B) % C;
-//        index++;
-//    }
-//    return repeat_index;
+//
+//// Алгоритм А: случайный выбор (предательство или сотрудничество)
+//bool algorithm_A(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
+//    return random_choice(); // Возвращает случайный выбор
 //}
-// 
+//
+//// Алгоритм Б: всегда предательство
+//bool algorithm_B(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
+//    return false; // Всегда предательство (false)
+//}
+//
+//// Алгоритм В: всегда сотрудничество
+//bool algorithm_C(int round_number, const vector<bool>& self_choices, const vector<bool>& enemy_choices) {
+//    return true; // Всегда сотрудничество (true)
+//}
+//
+//// Функция для определения результатов раунда
+//pair<int, int> get_round_result(bool algorithm_A_choice, bool algorithm_B_choice) {
+//    // В зависимости от сочетания выборов алгоритмов, возвращаем соответствующие результаты
+//    if (algorithm_A_choice && algorithm_B_choice) {
+//        return {24, 24}; // Оба сотрудничают
+//    } else if (!algorithm_A_choice && !algorithm_B_choice) {
+//        return {4, 4}; // Оба предают
+//    } else if (algorithm_A_choice && !algorithm_B_choice) {
+//        return {0, 20}; // A сотрудничает, B предает
+//    } else {
+//        return {20, 0}; // A предает, B сотрудничает
+//    }
+//}
+//
+//// Функция для запуска игры между двумя алгоритмами
+//pair<int, int> play_game(bool (*algorithm_A)(int, const vector<bool>&, const vector<bool>&),
+//                         bool (*algorithm_B)(int, const vector<bool>&, const vector<bool>&)) {
+//    random_device rd; // Источник случайности
+//    mt19937 gen(rd()); // Генератор случайных чисел
+//    uniform_int_distribution<> dis(100, 200); // Распределение количества раундов от 100 до 200
+//    int num_rounds = dis(gen); // Количество раундов
+//    int algorithm_A_score = 0; // Счет алгоритма A
+//    int algorithm_B_score = 0; // Счет алгоритма B
+//    vector<bool> algorithm_A_choices; // История выборов алгоритма A
+//    vector<bool> algorithm_B_choices; // История выборов алгоритма B
+//
+//    // Цикл по количеству раундов
+//    for (int round_number = 0; round_number < num_rounds; ++round_number) {
+//        // Получение выборов алгоритмов на текущий раунд
+//        bool algorithm_A_choice = algorithm_A(round_number, algorithm_A_choices, algorithm_B_choices);
+//        bool algorithm_B_choice = algorithm_B(round_number, algorithm_B_choices, algorithm_A_choices);
+//
+//        // Получение результатов текущего раунда
+//        auto [round_score_A, round_score_B] = get_round_result(algorithm_A_choice, algorithm_B_choice);
+//        algorithm_A_score += round_score_A; // Обновление счета A
+//        algorithm_B_score += round_score_B; // Обновление счета B
+//
+//        // Сохранение выборов текущего раунда
+//        algorithm_A_choices.push_back(algorithm_A_choice);
+//        algorithm_B_choices.push_back(algorithm_B_choice);
+//    }
+//
+//    return {algorithm_A_score, algorithm_B_score}; // Возвращаем итоговые счета
+//}
+//
 //int main() {
-//    int X0, A, B, C;
-//    cout << "Введите через пробел значения X0, A, B, C: ";
-//    cin >> X0 >> A >> B >> C;
-// 
-//    vector<int> sequenceall = linear_congruential_generator(X0, A, B, C);
-//    for (int num : sequenceall) {
-//        cout << num << " ";
+//    // Запуск игры с алгоритмами А и B
+//    cout << "1 игра" << endl;
+//    auto [algorithm_A_score, algorithm_B_score] = play_game(algorithm_A, algorithm_B);
+//    cout << "Algorithm A score: " << algorithm_A_score << endl;
+//    cout << "Algorithm B score: " << algorithm_B_score << endl;
+//
+//    // Запуск игры с алгоритмами А и C
+//    cout << "2 игра" << endl;
+//    auto [algorithm_A_score_2, algorithm_C_score] = play_game(algorithm_A, algorithm_C);
+//    cout << "Algorithm A score: " << algorithm_A_score_2 << endl;
+//    cout << "Algorithm C score: " << algorithm_C_score << endl;
+//
+//    // Запуск игры с алгоритмами B и C
+//    cout << "3 игра" << endl;
+//    auto [algorithm_B_score_2, algorithm_C_score_2] = play_game(algorithm_B, algorithm_C);
+//    cout << "Algorithm B score: " << algorithm_B_score_2 << endl;
+//    cout << "Algorithm C score: " << algorithm_C_score_2 << endl;
+//
+//    return 0;
+//}
+
+//
+
+// задание 5 // фибоначи
+//
+//#include <iostream>
+//#include <vector>
+//
+//using namespace std;
+//
+//// Перегрузка оператора << для вывода содержимого вектора
+//template<typename T>
+//ostream& operator<<(ostream& os, const vector<T>& vec) {
+//    for (auto elem : vec) {
+//        os << elem << " "; // Вывод каждого элемента вектора с пробелом
 //    }
-//    cout << endl;
-// 
-//    int repeat_index = linear_congruential_index(X0, A, B, C);
-//    cout << repeat_index + 1 << endl;
-// 
+//    return os;
+//}
+//
+//// Рекурсивная функция для генерации чисел Фибоначчи
+//void generateFibonacci(vector<uint64_t>& sequence, int index, int length) {
+//    if (index == length) {
+//        return; // Если достигнут конец последовательности, прекратить рекурсию
+//    }
+//
+//    if (index == 0 || index == 1) {
+//        sequence.push_back(1); // Первые два числа Фибоначчи равны 1
+//    } else {
+//        sequence.push_back(sequence[index - 1] + sequence[index - 2]); // Последующие числа равны сумме двух предыдущих
+//    }
+//
+//    // Рекурсивный вызов функции для следующего индекса
+//    return generateFibonacci(sequence, ++index, length);
+//}
+//
+//// Функция для вычисления нового значения на основе двух предыдущих чисел
+//uint64_t calculateNewValue(int offset1, int offset2, int mod, vector<uint64_t> sequence) {
+//    return (sequence[sequence.size() - offset1 - 1] + sequence[sequence.size() - offset2 - 1]) % mod;
+//    // Возвращает сумму двух чисел по смещениям offset1 и offset2, взятую по модулю mod
+//}
+//
+//int main() {
+//    vector<uint64_t> sequence; // Вектор для хранения последовательности чисел Фибоначчи
+//    generateFibonacci(sequence, 0, 56); // Генерация первых 56 чисел Фибоначчи
+//
+//    cout << "Fibonacci sequence: " << sequence << endl; // Вывод последовательности чисел Фибоначчи
+//
+//    int offset1 = 24, offset2 = 55; // Смещения для вычисления нового значения
+//
+//    int totalValues, modulus; // Переменные для хранения количества новых значений и модуля
+//    cout << "totalValues = ";
+//    cin >> totalValues; // Ввод количества новых значений от пользователя
+//    cout << "modulus = ";
+//    cin >> modulus; // Ввод модуля от пользователя
+//
+//    for (int i = 0; i < totalValues; i++) {
+//        // Вычисление нового значения и добавление его в последовательность
+//        int newValue = calculateNewValue(offset1, offset2, modulus, sequence);
+//        sequence.push_back(newValue);
+//        cout << newValue << endl; // Вывод нового значения
+//    }
+//
 //    return 0;
 //}
